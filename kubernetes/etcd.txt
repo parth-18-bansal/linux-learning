@@ -1,0 +1,24 @@
+1. etcd is key value pair database
+
+2. we can run it as systemd service or pod in the master node.
+
+3. install etcd
+ETCD_VER=v3.7.2
+
+// downloading binary and extracting it
+curl -LO https://storage.googleapis.com/etcd/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz
+tar -xzf etcd-${ETCD_VER}-linux-amd64.tar.gz
+
+// copying the extract in /usr/bin/path so that we can access it globally
+sudo cp etcd-${ETCD_VER}-linux-amd64/etcd \
+        etcd-${ETCD_VER}-linux-amd64/etcdctl \
+        etcd-${ETCD_VER}-linux-amd64/etcdutl \
+        /usr/local/bin/
+
+4. To run etcd run like this: .etcd
+
+5.
+By default it came with etcdctl client, which we can use to interact with etcd. And etcd listen at
+2379 port from client.
+
+6.
