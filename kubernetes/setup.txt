@@ -1,0 +1,20 @@
+// etcd
+ETCD_VER=v3.7.2
+
+// downloading binary and extracting it
+curl -LO https://storage.googleapis.com/etcd/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz
+tar -xzf etcd-${ETCD_VER}-linux-amd64.tar.gz
+
+// copying the extract in /usr/bin/path so that we can access it globally
+sudo cp etcd-${ETCD_VER}-linux-amd64/etcd \
+        etcd-${ETCD_VER}-linux-amd64/etcdctl \
+        etcd-${ETCD_VER}-linux-amd64/etcdutl \
+        /usr/local/bin/
+
+// api-server
+curl -LO "https://dl.k8s.io/v1.36.5/bin/linux/amd64/kube-apiserver"
+
+sudo install -o root -g root -m 0755 \
+  kube-apiserver /usr/local/bin/kube-apiserver
+
+kube-apiserver --version

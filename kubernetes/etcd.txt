@@ -15,10 +15,18 @@ sudo cp etcd-${ETCD_VER}-linux-amd64/etcd \
         etcd-${ETCD_VER}-linux-amd64/etcdutl \
         /usr/local/bin/
 
-4. To run etcd run like this: .etcd
+4. To run etcd run like this: etcd
 
 5.
 By default it came with etcdctl client, which we can use to interact with etcd. And etcd listen at
 2379 port from client.
 
-6.
+6. Basics commands
+etcdctl put <key> <value>
+etcdctl get <key>
+etcdctl del <key>
+etcdctl endpoint health
+etcdctl endpoint status --write-out=json
+etcdctl snapshot save backup.db = To create backup
+
+To set its version => export ETCDCTL=3
