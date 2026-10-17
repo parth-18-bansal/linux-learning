@@ -1,0 +1,6 @@
+// /usr/bin, /usr/local/bin, /usr/sbin/ /usr/local/sbin
+a. In /usr/bin, here those executable gets store which are installed by OS or package manager
+b. If we install any executable manually then we store them in /usr/local/bin
+c. sbin is for system adminstration utilities, so we those are installed by package manager then they go to
+   /usr/sbin and if we installed them then it will go to /usr/local/sbin
+d. and all these paths are stored in PATH environment variable
