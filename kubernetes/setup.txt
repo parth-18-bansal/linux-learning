@@ -35,8 +35,14 @@ After=network.target
 
 [Service]
 ExecStart=/usr/local/bin/kube-apiserver \
+  --advertise-address= \
+  --bind-address=0.0.0.0 \
+  --secure-port=6443 \
+  --allow-privileged=true \
+  --enable-admission-plugins=NodeRestriction \
+  --authorization-mode=Node,RBAC \
   --etcd-servers=http://127.0.0.1:2379 \
-  --secure-port=6443
+  --service-cluster-ip-range=10.96.0.0/12
 
 Restart=on-failure
 RestartSec=5
