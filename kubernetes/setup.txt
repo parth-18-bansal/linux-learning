@@ -58,6 +58,16 @@ openssl x509 -in apiserver.crt -text -noout
 
 
 
+// Generate service account public and private key
+_________________________________________________________________________________________________
+1. Generate the private key
+openssl genrsa -out sa.key 2048
+
+2. extract the public key from private key
+openssl rsa -in sa.key -pubout -out sa.pub
+
+
+
 
 // create a systemd sevice for api-server
 _________________________________________________________________________________________________________
@@ -77,10 +87,15 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --allow-privileged=true \
   --enable-admission-plugins=NodeRestriction \
   --authorization-mode=Node,RBAC \
-  --tls-cert-file=/home/parth/kubernetes/tls-certs/apiserver.crt
-  --tls-private-key-file=/home/parth/kubernetes/tls-certs/apiserver.key
+  --tls-cert-file=/home/parth/kubernetes/tls-certs/apiserver.crt \
+  --tls-private-key-file=/home/parth/kubernetes/tls-certs/apiserver.key \
+  --client-ca-file=/home/parth/kubernetes/kubernetes-ca/ca.crt \
+  --service-account-issuer=https://kubernetes.default.svc.cluster.local \
+  --service-account-key-file=/home/parth/kubernetes/sa-keys/sa.pub \
+  --service-account-signing-key-file=/home/parth/kubernetes/sa-keys/sa-key \
   --etcd-servers=http://127.0.0.1:2379 \
-  --service-cluster-ip-range=10.96.0.0/12
+  --service-cluster-ip-range=10.96.0.0/12 \
+  --v=2
 
 Restart=on-failure
 RestartSec=5
