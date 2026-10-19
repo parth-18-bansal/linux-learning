@@ -23,6 +23,42 @@ sudo install -o root -g root -m 0755 \
 kube-apiserver --version
 
 
+
+// Generate Certificat Authority cert and private key
+____________________________________________________________________________________________________________
+1. this is to generate the private RSA key, it is used by CA for siging the ssl certificate.
+openssl genrsa -out ca.key 2048
+
+2. this is to generate a CA certificate. it is like an identity card of CA, we stores this cert in the
+client's trusted CA list, by this clients can check server's cert that server's SSL cert is signed by
+trusted CA or not.
+openssl req -x509 -new -nodes -key ca.key -subj "/CN=kubernetes-ca" -days 3650 -out ca.crt
+
+3. To checks the details of the cert
+openssl x509 -in ca.crt -text -noout
+
+
+** Store this key and cert somewhere in the system, we later use these to sign the SSL certificates.
+
+// Generate tls certificate for apiserver
+1. generate the rsa private key
+openssl genrsa -out apiserver.key 2048
+
+2. write the apiserver.cnf files, it stores the details like for which ip, dns this certificate is valid
+and this file is used to create the CSR(certificate request), CSR contains the public key of the apiserver
+public key can be derieved from private key openssl derive it automatically and add in the CSR and cert
+
+openssl req -new -key apiserver.key -out apiserver.csr -config apiserver.cnf
+
+3. generate the signed tls certificate: it contains the signature and public key of apiserver
+openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out apiserver.crt -days 365 -extensions v3_req -extfile apiserver.cnf
+
+4. check the cert details:
+openssl x509 -in apiserver.crt -text -noout
+
+
+
+
 // create a systemd sevice for api-server
 _________________________________________________________________________________________________________
 sudo vim /etc/systemd/system/kube-apiserver.service
@@ -41,6 +77,8 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --allow-privileged=true \
   --enable-admission-plugins=NodeRestriction \
   --authorization-mode=Node,RBAC \
+  --tls-cert-file=/home/parth/kubernetes/tls-certs/apiserver.crt
+  --tls-private-key-file=/home/parth/kubernetes/tls-certs/apiserver.key
   --etcd-servers=http://127.0.0.1:2379 \
   --service-cluster-ip-range=10.96.0.0/12
 
