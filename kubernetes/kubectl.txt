@@ -1,0 +1,7 @@
+1. by default kubectl read its connection details from this path ~/.kube/config.
+   this file is called kubeconfig file and it tells kubectl that which apiserver to connect
+   and how to authenticate with it.
+   if it is present somewhere else then we have to specify the path using --kubeconfig flag in kubectl
+   commands
+
+2. 
