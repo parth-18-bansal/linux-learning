@@ -104,7 +104,13 @@ RestartSec=5
 WantedBy=multi-user.target
 
 
-sudo systemctl daemon-reload
+`sudo systemctl daemon-reload`
+
+
+// To check the logs and whether apiserver is running correctly or not
+_________________________________________________________________________________________________
+1. curl -k https://127.0.0.1:6443/readyz?verbose
+2. sudo journalctl -u kube-apiserver -f
 
 
 
@@ -126,7 +132,24 @@ kubectl version --client
 
 // connect kubectl and apiserver
 ______________________________________________________________________________________________________
-1. define the kubeconfig file.
+1. generate private key and cert for kubectl because in connection we will use mTLS
+-> openssl genrsa -out admin.key 2048
+   openssl req -new -key admin.key -out admin.csr -subj "/CN=admin/O=system:masters"
+   openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out admin.crt -days 365
+
+2. generate the kubeconfig file
+  a. set cluster, trusted CA
+    kubectl config set-cluster my-cluster --server=https://127.0.0.1:6443 --certificate-authority=ca.crt --embed-certs=true --kubeconfig=admin.kubeconfig
+  b. set client cert and key
+    kubectl config set-credentials admin --client-certificate=admin.crt --client-key=admin.key --embed-certs=true --kubeconfig=admin.kubeconfig
+  c. set and use context
+    kubectl config set-context default --cluster=my-cluster --user=admin --kubeconfig=admin.kubeconfig
+
+3. after generating the admin.kubeconfig paste it in ~/.kube/config file
+-> cp admin.kubeconfig ~/.kube/config 
+
+and set permission to 600
+
 
    
 
