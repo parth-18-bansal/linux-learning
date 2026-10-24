@@ -1,0 +1,3 @@
+1. Mostly controller manager sends request outside to apisever, but it also runs a small https server
+of its own on port 10257, this server serves /healthz(to check its health), /metrics(for prometheus)
+and few debug endpoint.
