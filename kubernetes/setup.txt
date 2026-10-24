@@ -41,6 +41,7 @@ trusted CA or not.
 ** Store this key and cert somewhere in the system, we later use these to sign the SSL certificates.
 
 // Generate tls certificate for apiserver
+___________________________________________________________________________________________________________
 1. generate the rsa private key
 -> openssl genrsa -out apiserver.key 2048
 
@@ -149,6 +150,38 @@ ________________________________________________________________________________
 -> cp admin.kubeconfig ~/.kube/config 
 
 and set permission to 600
+
+
+
+// kube controller manager
+________________________________________________________________________________________________________
+curl -LO "https://dl.k8s.io/v1.36.5/bin/linux/amd64/kube-controller-manager"
+
+sudo install -o root -g root -m 0755 \
+  kube-controller-manager /usr/local/bin/kube-controller-manager
+
+kube-controller-manager --version
+
+
+
+// create a systemd sevice for kube-controller-manager
+_____________________________________________________________________________________________________
+[Unit]
+Description=Kuberenetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target kube-apiserver.service
+Wants=kube-apiserver.service
+
+[Service]
+ExecStart=/usr/local/bin/kube-controller-manager \
+  --bind-address=0.0.0.0
+  --cluster-name=kubernetes \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
 
 
    
