@@ -145,6 +145,7 @@ ________________________________________________________________________________
     kubectl config set-credentials admin --client-certificate=admin.crt --client-key=admin.key --embed-certs=true --kubeconfig=admin.kubeconfig
   c. set and use context
     kubectl config set-context default --cluster=my-cluster --user=admin --kubeconfig=admin.kubeconfig
+    kubectl config use-context default --kubeconfig=admin.kubeconfig
 
 3. after generating the admin.kubeconfig paste it in ~/.kube/config file
 -> cp admin.kubeconfig ~/.kube/config 
@@ -161,6 +162,28 @@ sudo install -o root -g root -m 0755 \
   kube-controller-manager /usr/local/bin/kube-controller-manager
 
 kube-controller-manager --version
+
+
+// generate key and tls certificate for kube-controller-manager
+________________________________________________________________________________________________________
+1. define what to put in the cert using kcm.cnf file
+
+2. generate the private key
+->  openssl genrsa -out kube-controller-manager.key 2048
+
+3. create csr
+-> openssl req -new -key kube-controller-manager.key -config kcm.cnf -out kube-controller-manager.csr
+
+4. create crt
+-> openssl x509 -req -in kube-controller-manager.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile kcm.cnf -extensions ext -out kube-controller-manager.crt
+
+
+// create a kube config file for controller manager
+1.
+kubectl config set-cluster my-cluster --server=https://127.0.0.1:6443 --certificate-authority=ca.crt --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
+kubectl config set-credentials system:kube-controller-manager --client-certificate=kube-controller-manager.crt --client-key=kube-controller-manager.key --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
+kubectl config set-context default --cluster=my-cluster --user=system:kube-controller-manager --kubeconfig=kube-controller-manager.kubeconfig
+kubectl config use-context default --kubeconfig=kube-controller-manager.kubeconfig
 
 
 
@@ -180,6 +203,9 @@ ExecStart=/usr/local/bin/kube-controller-manager \
   --leader-elect=true \
   --cluster-signing-cert-file=/home/parth/kubernetes/kubernetes-ca/ca.crt \
   --cluster-signing-key-file=/home/parth/kubernetes/kubernetes-ca/ca.key \
+  --kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --authentication-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --authorization-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
   --v=2
 Restart=on-failure
 RestartSec=5
