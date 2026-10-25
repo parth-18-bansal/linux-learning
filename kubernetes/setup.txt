@@ -96,6 +96,7 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --service-account-signing-key-file=/home/parth/kubernetes/sa-keys/sa.key \
   --etcd-servers=http://127.0.0.1:2379 \
   --service-cluster-ip-range=10.96.0.0/12 \
+  --enable-bootstrap-token-auth=true \
   --v=2
 
 Restart=on-failure
@@ -105,7 +106,8 @@ RestartSec=5
 WantedBy=multi-user.target
 
 
-`sudo systemctl daemon-reload`
+
+sudo systemctl daemon-reload
 
 
 // To check the logs and whether apiserver is running correctly or not
@@ -206,6 +208,11 @@ ExecStart=/usr/local/bin/kube-controller-manager \
   --kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
   --authentication-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
   --authorization-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --service-cluster-ip-range=10.96.0.0/12 \
+  --allocate-node-cidrs=true \
+  --cluster-cidr=10.244.0.0/16 \
+  --use-service-account-credentials=true \
+  --controllers=*,bootstrapsigner,tokencleaner
   --v=2
 Restart=on-failure
 RestartSec=5
