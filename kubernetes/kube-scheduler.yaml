@@ -1,0 +1,6 @@
+apiversion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+clientConnection:
+  kubeconfig: "/home/parth/kubernetes/kube-config-files/kube-scheduler.kubeconfig"
+leaderElection:
+  leaderElect: true
