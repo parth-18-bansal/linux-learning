@@ -181,6 +181,7 @@ ________________________________________________________________________________
 
 
 // create a kube config file for controller manager
+_______________________________________________________________________________________________
 1.
 kubectl config set-cluster my-cluster --server=https://127.0.0.1:6443 --certificate-authority=ca.crt --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
 kubectl config set-credentials system:kube-controller-manager --client-certificate=kube-controller-manager.crt --client-key=kube-controller-manager.key --embed-certs=true --kubeconfig=kube-controller-manager.kubeconfig
@@ -219,6 +220,65 @@ RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+
+
+// kube-scheduler
+_____________________________________________________________________________________________________
+curl -LO "https://dl.k8s.io/v1.36.5/bin/linux/amd64/kube-scheduler"
+
+sudo install -o root -g root -m 0755 \
+  kube-scheduler /usr/local/bin/kube-scheduler
+
+kube-scheduler --version
+
+
+
+// generate key and tls certificate for kube-scheduler
+________________________________________________________________________________________________________
+1. define what to put in the cert using kube-scheduler-ext.cnf file
+
+2. generate the private key
+->  openssl genrsa -out kube-scheduler.key 2048
+
+3. create csr
+-> openssl req -new -key kube-scheduler.key -subj "/CN=system:kube-scheduler/O=system:kube-scheduler -out kube-scheduler.csr
+
+4. create crt
+-> openssl x509 -req -in kube-scheduler.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile kube-scheduler-ext.cnf -out kube-controller-manager.crt
+
+
+
+// create a systemd sevice for kube-scheduler
+_____________________________________________________________________________________________________
+[Unit]
+Description=Kuberenetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target kube-apiserver.service
+Wants=kube-apiserver.service
+
+[Service]
+ExecStart=/usr/local/bin/kube-controller-manager \
+  --bind-address=0.0.0.0
+  --cluster-name=kubernetes \
+  --root-ca-file=/home/parth/kubernetes/kubernetes-ca/ca.crt \
+  --leader-elect=true \
+  --cluster-signing-cert-file=/home/parth/kubernetes/kubernetes-ca/ca.crt \
+  --cluster-signing-key-file=/home/parth/kubernetes/kubernetes-ca/ca.key \
+  --kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --authentication-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --authorization-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-controller-manager.kubeconfig \
+  --service-cluster-ip-range=10.96.0.0/12 \
+  --allocate-node-cidrs=true \
+  --cluster-cidr=10.244.0.0/16 \
+  --use-service-account-credentials=true \
+  --controllers=*,bootstrapsigner,tokencleaner
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
 
 
    
