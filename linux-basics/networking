@@ -6,4 +6,4 @@ point of connection between the machine and network
 there are two types of interfaces: physical network interfaces and virtual network interfaces
 
 2. ip route
--> this give routetable rules.
+-> this gives route-table rules.
