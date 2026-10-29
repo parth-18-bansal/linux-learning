@@ -40,6 +40,9 @@ trusted CA or not.
 
 ** Store this key and cert somewhere in the system, we later use these to sign the SSL certificates.
 
+
+
+
 // Generate tls certificate for apiserver
 ___________________________________________________________________________________________________________
 1. generate the rsa private key
@@ -56,6 +59,30 @@ public key can be derieved from private key openssl derive it automatically and 
 
 4. check the cert details:
 -> openssl x509 -in apiserver.crt -text -noout
+
+
+
+
+// Generate front proxy certificte authority cert and private key (optionals but required in HPA etc)
+_____________________________________________________________________________________________________
+1. generate the ca private key to sign the certificate
+->  openssl genrsa -out front-proxy-ca.key 2048
+
+2. generate the front proxy CA cert
+-> openssl req -x509 -new -key front-proxy-ca.key -subj "/CN=front-proxy-ca" -days 3650 -out front-proxy-ca.crt
+
+
+// Generate tls certs for front proxy client(main api server) (optional)
+___________________________________________________________________________________________________________
+1. generate private key
+-> openssl genrsa -out front-proxy-client.key 2048
+
+2. create the CSR
+-> openssl req -new -key front-proxy-client.key -subj "/CN=front-proxy-client" -out front-proxy-client.csr
+
+3. create cert
+-> openssl x509 -req -in front-proxy-client.csr -CA front-proxy-ca.crt -CAkey front-proxy-ca.key -CAcreateserial -days 3650 -out front-proxy-client.crt
+
 
 
 
