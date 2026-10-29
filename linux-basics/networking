@@ -1,0 +1,9 @@
+1. ip a -> ip addresses
+-> this give the list of the network interfaces and also ip addresses associated with those network
+interfaces
+-> network interface is like a door for the machine through with data go out or come in. it is
+point of connection between the machine and network
+there are two types of interfaces: physical network interfaces and virtual network interfaces
+
+2. ip route
+-> this give routetable rules.
