@@ -7,3 +7,12 @@ there are two types of interfaces: physical network interfaces and virtual netwo
 
 2. ip route
 -> this gives route-table rules.
+
+3. sudo ss -lntp | grep 10259
+
+ss = socket statistic
+It displays information about network sockets, such as:
+- Which ports are open.
+- Which processes are listening on ports.
+- Which machines are connected.
+- Which IP addresses and ports are involved.
