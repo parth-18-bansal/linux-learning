@@ -124,6 +124,13 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --etcd-servers=http://127.0.0.1:2379 \
   --service-cluster-ip-range=10.96.0.0/12 \
   --enable-bootstrap-token-auth=true \
+  --requestheader-client-ca-file=/home/parth/kubernetes/extension-apiserver-ca/front-proxy-ca.crt \
+  --requestheader-allowed-names=front-proxy-client \
+  --requestheader-username-headers=X-Remote-User \
+  --requestheader-group-headers=X-Remote-Group \
+  --requestheader-extra-headers-prefix=X-Remote-Extra- \
+  --proxy-client-cert-file=/home/parth/kubernetes/extension-apiserver-ca/front-proxy-client/front-proxy-client.crt \
+  --proxy-client-key-file=/home/parth/kubernetes/extension-apiserver-ca/front-proxy-client/front-proxy-client.key \
   --v=2
 
 Restart=on-failure
@@ -297,7 +304,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/kube-controller-manager \
+ExecStart=/usr/local/bin/kube-scheduler \
   --bind-address=0.0.0.0 \
   --config=/home/parth/Documents/Code/linux-learning/kubernetes/kube-scheduler.yaml \
   --authentication-kubeconfig=/home/parth/kubernetes/kube-config-files/kube-scheduler.kubeconfig \
@@ -308,10 +315,3 @@ RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
-
-
-   
-
-
-
