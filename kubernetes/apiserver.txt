@@ -1,1 +1,20 @@
 1. To see the flags list use the kube-apiserver --help
+
+2. apiserver has 3 endpoints by hitting them we can check whether apiserver is healthy or not
+    a. /healthz : overall health check
+    b. /livez : check whether apisever is alive and should continue to run or not
+    c. /readyz : is apiserver is ready to perform its work or not
+
+we can hit these like this:
+curl -k https://127.0.0.1:6443/healthz
+
+and for more detailed output
+curl -k https://127.0.0.1:6443/healthz?verbose
+
+
+** simillary in controller manager we have only /healthz endpoint to check health and we can check
+hit it like this
+curl -k https://127.0.0.1:10257/healthz
+
+** and scheduler has three endpoints /healthz, /livez, /readyz, and we can check like this:
+curl -k https://127.0.0.1:10259/healthz?verbose
