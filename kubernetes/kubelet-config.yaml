@@ -1,0 +1,4 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+# it means kubelet asks systemd to create and manage cgroups
+cgroupDriver: systemd

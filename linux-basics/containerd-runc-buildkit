@@ -1,0 +1,29 @@
+1. runc is the low level process that setup namespaces, cgroup for containers
+
+2. there are three things here, containerd, shim-runc, runc. we talk to containerd via
+docker, nerdctl etc and then containerd starts the shim-runc(small helper process), which
+then talks with runc to create the container. Right now runc is parent process of the 
+container, but to make container running independent of runc, shim-runc become its parent and
+runc exits and then shim-runc handels the containers
+
+3. each container has its own parent shim-runc process.
+
+nerdctl/docker --> containerd ---> shim-runc ---> runc(it create container(cgroup,namespace)).
+
+4. Buildkit is use to build the docker image, it parses the Dockerfile, plan the steps, 
+cache results, creates the layers, and assemble the final image.
+
+Builkit take help of runc or containerd, to creates the image layers, here, for every RUN command in the dockerfile, a tempory container run and inside that container that RUN
+command runs and then temporary container gets stop and filesystem changes get saved in the docker image layers
+
+so this temporary container is created by runc
+
+so flow is like this:
+
+buildkit --> runc
+OR
+buildkit ---> containerd ---> shim-runc ---> runc
+
+which buildkit use runc directly or via containerd depends on which worker is enabled in buildkit.
+
+5. buildkitctl is use to interact with buildkit.

@@ -330,3 +330,30 @@ sudo install -o root -g root -m 0755 \
   kubelet /usr/local/bin/kubelet
 
 kubelet --version
+
+
+
+// install runc, containerd, buildkitd, buildkitctl, nerdctl
+______________________________________________________
+
+
+
+// create a systemd service for Kubelet
+_______________________________________________________________________________________________
+[Unit]
+Description=Kuberenetes kubelet
+Documentation=https://kubernetes.io/docs/
+After=containerd.service network-online.target
+Wants=network-online.target
+Requires=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \
+  --config= \
+  --v=2
+Restart=always
+RestartSec=10
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

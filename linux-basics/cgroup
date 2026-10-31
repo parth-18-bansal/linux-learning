@@ -1,0 +1,2 @@
+1. It is a kernel feature that enforces resource limits(CPU, memory etc.)
+2. in new linux systems, systemd is the init system (means systemd is first userspace process that will run in the system and its pid is 1), and systemd manages cgroups for everything on the host.
