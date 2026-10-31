@@ -18,3 +18,10 @@ curl -k https://127.0.0.1:10257/healthz
 
 ** and scheduler has three endpoints /healthz, /livez, /readyz, and we can check like this:
 curl -k https://127.0.0.1:10259/healthz?verbose
+
+
+
+
+flags
+******************************************************
+1. etcd connection
