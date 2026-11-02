@@ -335,6 +335,10 @@ kubelet --version
 
 // install runc, containerd, buildkitd, buildkitctl, nerdctl
 ______________________________________________________
+1. cgroupdriver's value in containerd and kubeletconfig should be same. if systemd is init process then it is good to set systemdcgroup in containerd 
+true and cgroupdriver in kubelet config = systemdcgroup.
+
+
 
 
 
