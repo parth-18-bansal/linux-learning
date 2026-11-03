@@ -1,0 +1,6 @@
+1. socket is a way by which two process can communicate(exchange data) with each other. if there are two process a and b, then to communicate each will
+have a socket through which they can send or recieve data.
+
+2. there are two type of sockets, unix domain by which two process in same computer can communicate with each and internet domain where two process can
+communicate with each other over network(means two process are in two different computers).
+

@@ -6,4 +6,4 @@ cgroupDriver: systemd
 clusterDomain: cluster.local
 clusterDNS:
   - 10.96.0.10
-containerRuntimeEndpoint: 
+containerRuntimeEndpoint: unix:///run/containerd/containerd.sock

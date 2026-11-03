@@ -27,3 +27,7 @@ buildkit ---> containerd ---> shim-runc ---> runc
 which buildkit use runc directly or via containerd depends on which worker is enabled in buildkit.
 
 5. buildkitctl is use to interact with buildkit.
+
+6. crictl it is use to interact with CRI (container runtime interface)
+
+kubelet --> CRI ---> Containerd ----> runc 
