@@ -1,9 +1,34 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
+
 # it means kubelet asks systemd to create and manage cgroups
 cgroupDriver: systemd
+
 # these are related to DNS lookup and CoreDNS, which we setup later
 clusterDomain: cluster.local
 clusterDNS:
   - 10.96.0.10
+
+#socket path for communicating with containerd
 containerRuntimeEndpoint: unix:///run/containerd/containerd.sock
+
+# systemd-resolved is the local DNS service that runs in the node 
+# and there are two files /etc/resolv.conf and /run/systemd/resolve/resolv.conf, /etc/resolv.conf points to the local dns service, and
+# /run/systemd/resolve/resolv.conf points to real dns servers(like router, 8.8.8.8 etc).
+# so first application running in node go to local dns service if local dns service is not able to resolve, the local dns service
+# use real dns servers that are listed in /run/systemd/resolve/resolv.conf.
+# so local dns listen at 127.0.0.5.:53, so if application sends the request at 127.0.0.53:53 then it go to systemd-resolve and this ip is listed in
+# /etc/resolv.conf
+
+# if pod make any outside the cluster request like google.com etc then real dns servers's (listed at nodes's /run/systemd/resolve/resovl.conf)
+# will be use, not local dns service of node, because
+# systemd-resolve of node listen at 127.0.0.53, for pod this ip is iteself because it come in range of 127.0.0.0/8. so request will go to pod itself
+# instead of node's local dns.
+
+# so app-pod ---> coreDNS-pod ----(if there is outside cluster request) ---> real-dns-servers
+# if there is inside cluster request then coreDNS pod just look the etcd via apiserver and return the corresponding ip.
+# and each pod has /etc/resolv.conf which tells the ClusterIP of coredns service.
+# coreDNS's /etc/resolv.conf get created using this "resolvConf" attribute's value.
+resolvConf: /run/systemd/resolve/resolv.conf
+
+
