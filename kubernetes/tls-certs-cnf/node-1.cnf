@@ -4,4 +4,14 @@ prompt = no
 req_extensions = v3_req
 
 [dn]
-CN = system:node:
+CN = system:node:ubuntu1
+O = system:nodes
+
+[v3_req]
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = ubuntu1
+IP.1 = 192.168.1.13
