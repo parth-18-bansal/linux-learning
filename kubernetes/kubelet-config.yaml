@@ -29,6 +29,9 @@ containerRuntimeEndpoint: unix:///run/containerd/containerd.sock
 # if there is inside cluster request then coreDNS pod just look the etcd via apiserver and return the corresponding ip.
 # and each pod has /etc/resolv.conf which tells the ClusterIP of coredns service.
 # coreDNS's /etc/resolv.conf get created using this "resolvConf" attribute's value.
+
+# 1. Kubelet writes pod's /etc/resolv.conf. And it points to "kube-dns" service, which fronts CoreDNS pods
+# 2. app-pod  ---> kube-dns(service)---> coredns pod
 resolvConf: /run/systemd/resolve/resolv.conf
 
 
