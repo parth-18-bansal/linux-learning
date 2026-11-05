@@ -3,4 +3,11 @@
 
 flags
 **********************************
-coredns related:
+DNS resolving:
+    1. resolvConf
+    2. clusterDomain
+    3. clusterDNS
+Containerd:
+    1. containerRuntimeEndpoint
+Cgroup(like pod cgroup etc)
+    1.cgroupDriver

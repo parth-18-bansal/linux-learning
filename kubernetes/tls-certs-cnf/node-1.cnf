@@ -1,0 +1,7 @@
+[req]
+distinguished_name = dn
+prompt = no
+req_extensions = v3_req
+
+[dn]
+CN = system:node:

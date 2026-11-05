@@ -26,12 +26,21 @@ containerRuntimeEndpoint: unix:///run/containerd/containerd.sock
 # instead of node's local dns.
 
 # so app-pod ---> coreDNS-pod ----(if there is outside cluster request) ---> real-dns-servers
-# if there is inside cluster request then coreDNS pod just look the etcd via apiserver and return the corresponding ip.
+# if there is inside cluster request then coreDNS pod just look into in memory cache and return the corresponding ip.
 # and each pod has /etc/resolv.conf which tells the ClusterIP of coredns service.
 # coreDNS's /etc/resolv.conf get created using this "resolvConf" attribute's value.
 
 # 1. Kubelet writes pod's /etc/resolv.conf. And it points to "kube-dns" service, which fronts CoreDNS pods
-# 2. app-pod  ---> kube-dns(service)---> coredns pod
+       
+                                                                     #(internal)
+# 2. app-pod  ---> kube-dns(service)    -----------> coredns pod  ------------------>  check in in-memory cache
+#                                                        |
+#                                                        | external
+#                                                        |
+                                                       # sends the dns query to real dns resolver
 resolvConf: /run/systemd/resolve/resolv.conf
+
+tlsCertFile:
+tlsPrivateKeyFile:
 
 
