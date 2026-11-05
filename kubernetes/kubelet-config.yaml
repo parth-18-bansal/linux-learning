@@ -1,6 +1,21 @@
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 
+authentication:
+  # anonymous false means a request without credentials(token, certificate) is not allowed, kubelet reject these type of request
+  anonymous:
+    enabled: false
+  # it means if request contains the token then kubelet sends TokenReview request to apiserver and if apiserver says yes, the 
+  # request is allowed
+  webhook:
+    enabled: true
+  # how to verify the client cert
+  x509:
+    clientCAFile: /data/code/kubernetes/ca.crt
+
+authorization:
+  mode: webhook
+
 # it means kubelet asks systemd to create and manage cgroups
 cgroupDriver: systemd
 
@@ -40,7 +55,7 @@ containerRuntimeEndpoint: unix:///run/containerd/containerd.sock
                                                        # sends the dns query to real dns resolver
 resolvConf: /run/systemd/resolve/resolv.conf
 
-tlsCertFile:
-tlsPrivateKeyFile:
+tlsCertFile: /data/code/kubernetes/node1.crt
+tlsPrivateKeyFile: /data/code/kubernetes/node1.key
 
 
