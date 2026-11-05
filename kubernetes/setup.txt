@@ -131,6 +131,9 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --requestheader-extra-headers-prefix=X-Remote-Extra- \
   --proxy-client-cert-file=/home/parth/kubernetes/extension-apiserver-ca/front-proxy-client/front-proxy-client.crt \
   --proxy-client-key-file=/home/parth/kubernetes/extension-apiserver-ca/front-proxy-client/front-proxy-client.key \
+  --kubelet-client-certificate=/home/parth/kubernetes/apiserver-tls-certs/apiserver-kubelet-client.crt \
+  --kubelet-client-key=/home/parth/kubernetes/apiserver-tls-certs\apiserver-kubelet-client.key \
+  --kubelet-certificate-authority=/home/parth/kubernetes/kubernetes-ca/ca.crt \
   --v=2
 
 Restart=on-failure
@@ -138,6 +141,7 @@ RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
+
 
 
 
@@ -373,3 +377,13 @@ StartLimitInterval=0
 
 [Install]
 WantedBy=multi-user.target
+
+
+// generate kubelet-client cert and key for apiserver
+______________________________________________________
+by this certificate apiserver can request kubelet
+
+openssl genrsa -out apiserver-kubelet-client.key 2048
+openssl req -new -key apiserver-kubelet-client.key -subj "/CN=kube-apiserver-kubelet-client" -out apiserver-kubelet-client.csr
+openssl x509 -req -in apiserver-kubelet-client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile apiserver-kubelet-client.cnf -out apiserver-kubelet-client.crt
+
