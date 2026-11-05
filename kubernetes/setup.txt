@@ -345,7 +345,12 @@ ________________________________________________________________________________
 
 // generate tls certificates(server) for kubelet
 _____________________________________________________________________________________________________
+this is used by kubelet when kubelet act as a server
 
+openssl genrsa -out node1.key 2048
+openssl req -new -key node1.key -out node1.csr -config node-1.cnf
+openssl x509 -req -in node1.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile node-1.cnf -extensions v3_req -out node1.crt
+ 
 
 
 
