@@ -30,3 +30,4 @@ flags
     1. kubelet-client-certificate
     2. kubelet-client-key
     3. kubelet-certificate-authority
+    4. kubelet-preferred-address-types

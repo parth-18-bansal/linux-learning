@@ -134,6 +134,7 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --kubelet-client-certificate=/home/parth/kubernetes/apiserver-tls-certs/apiserver-kubelet-client.crt \
   --kubelet-client-key=/home/parth/kubernetes/apiserver-tls-certs\apiserver-kubelet-client.key \
   --kubelet-certificate-authority=/home/parth/kubernetes/kubernetes-ca/ca.crt \
+  --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP \
   --v=2
 
 Restart=on-failure
@@ -141,7 +142,6 @@ RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-
 
 
 
