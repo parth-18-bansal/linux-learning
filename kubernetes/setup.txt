@@ -369,7 +369,9 @@ Requires=containerd.service
 
 [Service]
 ExecStart=/usr/local/bin/kubelet \
-  --config= \
+  --config=/data/code/linux-learning/kubernetes/kubelet-config.yaml \
+  --kubeconfig=/data/code/kubernetes/node1.kubeconfig \
+  --register-node=true \
   --v=2
 Restart=always
 RestartSec=10
@@ -386,4 +388,20 @@ by this certificate apiserver can request kubelet
 openssl genrsa -out apiserver-kubelet-client.key 2048
 openssl req -new -key apiserver-kubelet-client.key -subj "/CN=kube-apiserver-kubelet-client" -out apiserver-kubelet-client.csr
 openssl x509 -req -in apiserver-kubelet-client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile apiserver-kubelet-client.cnf -out apiserver-kubelet-client.crt
+
+
+// Connect Kubelet ----> Apiserver connection (Here we are not doing TLS bootstrap)
+_______________________________________________________________________________________________
+kubelet to apiserver communication:
+
+openssl genrsa -out node1-client.key 2048
+openssl req -new -key node1-client.key -subj "/CN=system:node:ubuntu1/O=system:nodes" -out node1-client.csr
+openssl x509 -req -in node1-client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile node1-client.ext -out node1-client.crt
+
+
+kubectl config set-cluster my-cluster --server=https://192.168.1.21:6443 --certificate-authority=ca.crt --embed-certs=true --kubeconfig=node1.kubeconfig
+kubectl config set-credentials system:node:ubuntu1 --client-certificate=node1-client.crt --client-key=node1-client.key --embed-certs=true --kubeconfig=node1.kubeconfig
+kubectl config set-context default --cluster=my-cluster --user=system:node:ubuntu1 --kubeconfig=node1.kubeconfig
+kubectl config use-context default --kubeconfig=node1.kubeconfig
+
 

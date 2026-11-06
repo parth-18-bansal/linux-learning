@@ -3,7 +3,7 @@
 
 flags
 **********************************
-DNS resolving:
+kubelet writes the pod's /etc/resolv.conf: normal pod as well as CoreDNS pod:
     1. resolvConf
     2. clusterDomain
     3. clusterDNS
@@ -16,3 +16,5 @@ DNS resolving:
     1. containerRuntimeEndpoint
 3. Kubelet also creates cgroups like pod cgroup etc
     1. cgroupDriver
+4. kubelet talks with others
+    1. kubeconfig file

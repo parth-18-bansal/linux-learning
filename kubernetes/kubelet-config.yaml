@@ -13,6 +13,7 @@ authentication:
   x509:
     clientCAFile: /data/code/kubernetes/ca.crt
 
+# in this kubelet ask apiserver whether client is allowed to do the action by sending "SubjectActionReview" and then apiserver checks against RBAC
 authorization:
   mode: webhook
 
