@@ -24,4 +24,9 @@ curl -k https://127.0.0.1:10259/healthz?verbose
 
 flags
 ******************************************************
-1. etcd connection
+1. apiserver talks with etcd:
+    1. etcd-servers
+2. apiserver talks with kubelet:
+    1. kubelet-client-certificate
+    2. kubelet-client-key
+    3. kubelet-certificate-authority
