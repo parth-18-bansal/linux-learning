@@ -405,3 +405,16 @@ kubectl config set-context default --cluster=my-cluster --user=system:node:ubunt
 kubectl config use-context default --kubeconfig=node1.kubeconfig
 
 
+
+// Now check whether worker node and control plane are able to reach each other or not
+___________________________________________________________________________________________________________________
+1. want to check without certificates
+-> curl -k https://192.168.1.21:6443/version
+
+2. want to check with certificates:
+-> this should fail(without -k): curl https://192.168.1.21:6443/version
+
+and this should work
+-> curl --cacert ca.crt https://192.168.1.21:6443/version
+
+

@@ -21,6 +21,23 @@ curl -k https://127.0.0.1:10259/healthz?verbose
 
 
 
+3. From worker node: this: curl --cacert ca.crt https://192.168.1.21:6443/version is working without client cert because
+__________________________________________________________________________________________________________________________
+**
+here curl is working without client cert(although mTLS is following), because here api server request the client cert but client cert is optional, 
+so by curl we are able to authenticate, so apiserver accepts the request and treat the client's username as "system:anonymous" and group name as
+"system:unauthenticated".
+
+this acceptance is control by --anonymous-auth flag, and by default it is true, and if it is true then apiserver accept the anonymous requests at
+some basics endpoints like /version, /healthz, /livez, /readyz.
+
+if we set it false then we need client cert also.
+
+here RBAC decides, what a client do, by default, "system:public-info-viewer" cluster-role is attached to "system:unauthenticated", which allow to access
+these endpoints: /version, /healthz, /livez, /readyz. i.e why we are able to access this endpoint without client cert.
+
+
+
 
 flags
 ******************************************************
@@ -30,4 +47,4 @@ flags
     1. kubelet-client-certificate
     2. kubelet-client-key
     3. kubelet-certificate-authority
-    4. kubelet-preferred-address-types
+    4. kubelet-preferred-address-types 
