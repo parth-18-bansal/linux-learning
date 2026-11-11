@@ -343,8 +343,12 @@ ______________________________________________________
 true and cgroupdriver in kubelet config = systemdcgroup.
 
 
+
+
 // define kubelet-config.yaml
 _____________________________________________________________________________________________________
+
+
 
 
 // generate tls certificates(server) for kubelet
@@ -371,6 +375,7 @@ Requires=containerd.service
 ExecStart=/usr/local/bin/kubelet \
   --config=/data/code/linux-learning/kubernetes/kubelet-config.yaml \
   --kubeconfig=/data/code/kubernetes/node1.kubeconfig \
+  --node-ip=192.168.1.13 \
   --v=2
 Restart=always
 RestartSec=10
