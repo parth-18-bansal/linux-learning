@@ -371,7 +371,6 @@ Requires=containerd.service
 ExecStart=/usr/local/bin/kubelet \
   --config=/data/code/linux-learning/kubernetes/kubelet-config.yaml \
   --kubeconfig=/data/code/kubernetes/node1.kubeconfig \
-  --register-node=true \
   --v=2
 Restart=always
 RestartSec=10
@@ -416,5 +415,18 @@ ________________________________________________________________________________
 
 and this should work
 -> curl --cacert ca.crt https://192.168.1.21:6443/version
+
+
+
+// For running Kubelet in worker node we have to off the swap, 
+_______________________________________________________________________________________________
+1. To check whether swap is off or on
+-> sudo swapon --show
+
+2. To off the swap temporarily
+-> sudo swapoff -a
+
+3. To on the swap 
+-> sudo swapon -a
 
 

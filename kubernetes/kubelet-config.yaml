@@ -15,10 +15,14 @@ authentication:
 
 # in this kubelet ask apiserver whether client is allowed to do the action by sending "SubjectActionReview" and then apiserver checks against RBAC
 authorization:
-  mode: webhook
+  mode: Webhook
 
 # it means kubelet asks systemd to create and manage cgroups
 cgroupDriver: systemd
+
+# by default it is true, by this when kubelet starts in the worker node it try to register the woker node in the cluster automatically, by sending
+# a request to apiserver for creating a node object in etcd.
+registerNode: true
 
 # these are related to DNS lookup and CoreDNS, which we setup later
 clusterDomain: cluster.local
