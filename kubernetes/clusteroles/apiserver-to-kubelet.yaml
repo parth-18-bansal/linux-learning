@@ -1,0 +1,29 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:kube-apiserver-to-kubelet
+rules:
+    # apiGroups are like type of resources, in kubernetes resources are divided into
+    # categories(api-groups). "" this is for core-api-group, nodes, pods etc
+    # belongs to core-api-groups
+  - apiGroups: [""]
+    # there are resources and subresources(api endpoint), here node is a 
+    # resources and 
+    # nodes/{} is subresources. we are giving permission related to these subresources
+    resources: ["nodes/proxy","nodes/stats","nodes/log","nodes/spec","nodes/metrics"]
+    # this tells the operation that we can perform on the above resources.
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kube-apiserver
+roleRef:
+  apiGroups: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-apiserver-to-kubelet
+subjects:
+  - apiGroups: rbac.authorization.k8s.io
+    kind: User
+    name: kube-apiserver-kubelet-client
+

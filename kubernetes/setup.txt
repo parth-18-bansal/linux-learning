@@ -394,6 +394,19 @@ openssl req -new -key apiserver-kubelet-client.key -subj "/CN=kube-apiserver-kub
 openssl x509 -req -in apiserver-kubelet-client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -days 365 -extfile apiserver-kubelet-client.cnf -out apiserver-kubelet-client.crt
 
 
+
+
+// Creates cluster-role and cluster role bindings
+_______________________________________________________________________________________________
+This gives permission to apiserver to access interact with worker node via kubelet
+
+1. Define Cluster Role and Cluster role binding in file: apiserver-to-kubelet.yaml
+
+2. kubectl apply -f apiserver-to-kubelet.yaml
+
+
+
+
 // Connect Kubelet ----> Apiserver connection (Here we are not doing TLS bootstrap)
 _______________________________________________________________________________________________
 kubelet to apiserver communication:
