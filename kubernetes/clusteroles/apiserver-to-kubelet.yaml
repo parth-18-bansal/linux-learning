@@ -19,11 +19,10 @@ kind: ClusterRoleBinding
 metadata:
   name: system:kube-apiserver
 roleRef:
-  apiGroups: rbac.authorization.k8s.io
+  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: system:kube-apiserver-to-kubelet
 subjects:
-  - apiGroups: rbac.authorization.k8s.io
-    kind: User
+  - kind: User
     name: kube-apiserver-kubelet-client
 

@@ -1,0 +1,9 @@
+1. kubectl describe node <node-name>
+-> give information about the node
+
+2. kubectl get --raw "/api/v1/nodes/<node-name>/proxy/metrics"
+   kubectl get --raw "/api/v1/nodes/<node-name>/proxy/stats/summary"
+-> hitting some api and asking kubelet of that node to get the info
+
+3. kubectl get node -o wide
+-> to get info about the node.

@@ -1,3 +1,17 @@
 1. Mostly controller manager sends request outside to apisever, but it also runs a small https server
 of its own on port 10257, this server serves /healthz(to check its health), /metrics(for prometheus)
 and few debug endpoint.
+
+
+
+flags
+***********************************************************
+1. Allocate PodCIDR range to Node. When kubelet registers the node by creating
+node object via apisever, then node-controller assign a subset of node-cidr to 
+that node. So node-controller watches the node object and when it sees any new
+node object then it assign the PodCIDR to it.
+
+--allocate-node-cidrs=true \
+--cluster-cidr=10.244.0.0/16 \
+
+2. 

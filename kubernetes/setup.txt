@@ -435,6 +435,20 @@ and this should work
 -> curl --cacert ca.crt https://192.168.1.21:6443/version
 
 
+4. check does apiserver is able to access kubelet or not
+->
+  curl --cacert ca.crt \
+     --cert apiserver-kubelet-client.crt \
+     --key apiserver-kubelet-client.key \
+     https://192.168.1.13:10250/healthz
+
+  or
+
+  kubectl get --raw "/api/v1/nodes/ubuntu1/proxy/metrics"
+
+  (because this command flow like this kubectl ----> apiserver ---> kubelet)
+
+
 
 // For running Kubelet in worker node we have to off the swap, 
 _______________________________________________________________________________________________
@@ -446,5 +460,12 @@ ________________________________________________________________________________
 
 3. To on the swap 
 -> sudo swapon -a
+
+
+
+// registering the nodes
+______________________________________________________
+1. when we start the kubelet in the node, then it will automatically registered
+that node by creating the node object via apiserver.
 
 
