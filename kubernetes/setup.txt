@@ -468,4 +468,9 @@ ______________________________________________________
 1. when we start the kubelet in the node, then it will automatically registered
 that node by creating the node object via apiserver.
 
+2. Registering the control plane
+-> Right now control plane is not registered, but if in future we want
+to registered it to run some pods or some other need like demaonset etc 
+then we have to setup kubelet in control plane also.
+
 

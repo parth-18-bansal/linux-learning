@@ -7,3 +7,6 @@
 
 3. kubectl get node -o wide
 -> to get info about the node.
+
+4. kubectl get clusterroles system:kubelet-api-admin -o yaml
+-> to see the configuration of the resource
