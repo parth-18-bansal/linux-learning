@@ -1,0 +1,7 @@
+1. cilium, calico, etc are networking plugins(software). these are called CNI
+plugins, because these follow the CNI contract(rules), for receiving and sending
+response to container runtime. CNI rules help to decouple the container runtime
+and network plugins so that we can change network plugins without effecting 
+container runtime setup.
+
+2. these network plugins setup the networking in kubernetes.
