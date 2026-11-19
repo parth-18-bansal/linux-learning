@@ -474,3 +474,12 @@ to registered it to run some pods or some other need like demaonset etc
 then we have to setup kubelet in control plane also.
 
 
+
+
+
+
+// cilium
+______________________________________________________
+
+
+
