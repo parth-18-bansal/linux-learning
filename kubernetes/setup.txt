@@ -480,6 +480,19 @@ then we have to setup kubelet in control plane also.
 
 // cilium
 ______________________________________________________
-
-
-
+1. First we have to install cilium cli, it is used to configure, manage, and troubleshoot cilium
+  a. get the latest stable version of cilium.
+  -> CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+  b. set the architecute env
+  CLI_ARCH=amd64
+  if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+  c. downlad cilium cli
+  -> curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  d. verifying that we have downloaded correct file not corrupted
+  -> sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+  e. extract the binaries and stores it at path
+  -> sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+  f. delete archives
+  -> rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  g. check the installation
+  -> cilium version
