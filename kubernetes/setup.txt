@@ -508,4 +508,10 @@ ______________________________________________________
      then we will have to setup kubelet in control plane also.
 
 
-1. First cilium CLI needs client certs to talk with apiserver.
+1. Now cilium cli will talk with apiserver, cilium by default use ~/.kube/config to talk apiserver like
+kubectl.
+
+so to install cilium we have to run
+-> cilium install
+
+This will create a deployment for cilium operator and a daemonset for cilium agent
