@@ -481,6 +481,7 @@ then we have to setup kubelet in control plane also.
 // cilium
 ______________________________________________________
 1. First we have to install cilium cli, it is used to configure, manage, and troubleshoot cilium
+**Note: install cilium cli in control plane node. 
   a. get the latest stable version of cilium.
   -> CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
   b. set the architecute env
@@ -496,3 +497,15 @@ ______________________________________________________
   -> rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
   g. check the installation
   -> cilium version
+
+2. Now install cilium using cilium cli.
+**Note -> so here cilium cli will talk with apiserver and creates daemonset and deployment for
+          cilium agent, cilium operator, cilium envoy etc.
+          And then scheduler, kubelet etc will run the pods for these in each woker node.
+
+  ** now we are running kubelet only in woker node so cilium agent etc will only run in woker node
+     but for few things, later may be in future we need to run cilium agents etc in control plane also
+     then we will have to setup kubelet in control plane also.
+
+
+1. First cilium CLI needs client certs to talk with apiserver.
