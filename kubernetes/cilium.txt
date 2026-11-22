@@ -1,0 +1,9 @@
+1. we install cilium using cilium cli and by running cilium install command.
+
+2. when we run "cilium install" cilium cli talks with apiserver and create daemonset, deployment object
+for cillium agent, cilium envoy and cilum-operator.
+
+3. Now Cilium-agent, it is a daemone set resource, before starting it, 6 init containers get up and run
+a. first init container build the config file for cilium agent by running command "cilium-dbg build-config"
+Basically it merges the default config and custom config resource: "CiliumNodeConfig" and creates a final
+config file. which cilium agent will use.
