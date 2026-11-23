@@ -16,3 +16,19 @@
 
 6. information about any type of resource
 -> kubectl describe <resourcetype> <resourcename>
+
+
+
+
+
+****************************************
+Trouble-shooting
+****************************************
+1. Find the faulty pod
+kubectl get pods -A
+
+2. Now to find why a particular pod is failing
+kubectl describe pod <pod-name>
+
+3. To see the logs of containers inside pod.
+-> kubectl logs <pod-name> -c <container-name>

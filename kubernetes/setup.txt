@@ -512,6 +512,8 @@ ______________________________________________________
 kubectl.
 
 so to install cilium we have to run
--> cilium install
+-> cilium install \
+  --set k8sServiceHost=192.168.1.21 \
+  --set k8sServicePort=6443
 
-This will create a deployment for cilium operator and a daemonset for cilium agent
+This will create a deployment for cilium operator and a daemonset for cilium agent, cilium-envoy
