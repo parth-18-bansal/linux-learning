@@ -508,7 +508,7 @@ ______________________________________________________
      then we will have to setup kubelet in control plane also.
 
 
-1. Now cilium cli will talk with apiserver, cilium by default use ~/.kube/config to talk apiserver like
+3. Now cilium cli will talk with apiserver, cilium by default use ~/.kube/config to talk apiserver like
 kubectl.
 
 so to install cilium we have to run
@@ -517,3 +517,13 @@ so to install cilium we have to run
   --set k8sServicePort=6443
 
 This will create a deployment for cilium operator and a daemonset for cilium agent, cilium-envoy
+
+4. To check the status
+-> cilium status
+
+5. To check and test the networking we can run this command:
+-> cilium connectivity test --request-timeout 30s --connect-timeout 10s
+
+rightnow. it will fail because we do not have setup "CoreDNS"(DNS resolution)
+
+
