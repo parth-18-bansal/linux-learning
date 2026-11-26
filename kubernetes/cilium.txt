@@ -6,10 +6,22 @@ for cillium agent, cilium envoy and cilum-operator.
 3. cilium configurations are stored in "cilium-config" configmap,
 -> we can see the config values via cilium cli also: cilium config view.
 
-4. cilium install command creates service accounts, roles, and rolebinding, which gave cilium-agent,
+
+Related terms
+*******************************
+1. Endpoint
+2. Identity
+
+
+
+Components
+*****************************
+1. cilium install command creates service accounts, roles, and rolebinding, which gave cilium-agent,
 cilium-operator, cilium-envoy some permissions to query apiserver for some resources.
 
-4. Now Cilium-agent, it is a daemone set resource, before starting it, 6 init containers get up and run
+2. Now Cilium-agent, it is a daemone set resource, before starting it, 6 init containers get up and run
 a. first init container build the config file for cilium agent by running command "cilium-dbg build-config"
 Basically it merges the default config and custom config resource: "CiliumNodeConfig" and creates a final
 config file. which cilium agent will use.
+
+3. cilium operator: it do the cluster-wide work, like allocation of ip cidr range to the nodes etc.
