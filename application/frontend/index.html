@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Todo list</title>
+  <style>
+    :root {
+      --bg: #eef2f0; --panel: #ffffff; --ink: #1d2b27; --muted: #64746f;
+      --accent: #2f6f5e; --line: #d5dedb; --danger: #b3412f;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141b19; --panel: #1d2624; --ink: #e4ece9; --muted: #93a39e;
+        --accent: #6dbfa6; --line: #2e3a37; --danger: #e07a68;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex; justify-content: center; padding: 48px 16px;
+    }
+    main { width: 100%; max-width: 520px; }
+    h1 { font-size: 1.75rem; margin: 0 0 4px; }
+    .status { color: var(--muted); font-size: .9rem; margin: 0 0 24px; }
+    form { display: flex; gap: 8px; margin-bottom: 20px; }
+    input[type=text] {
+      flex: 1; padding: 12px 14px; font-size: 1rem; border-radius: 8px;
+      border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    }
+    button {
+      padding: 12px 18px; font-size: 1rem; border: 0; border-radius: 8px;
+      background: var(--accent); color: #fff; cursor: pointer;
+    }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    ul { list-style: none; padding: 0; margin: 0; background: var(--panel);
+         border: 1px solid var(--line); border-radius: 10px; }
+    li { display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+         border-bottom: 1px solid var(--line); }
+    li:last-child { border-bottom: 0; }
+    li span { flex: 1; }
+    li.done span { text-decoration: line-through; color: var(--muted); }
+    li input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); }
+    .delete { background: transparent; color: var(--danger); padding: 4px 8px; font-size: .9rem; }
+    .empty { padding: 20px; color: var(--muted); text-align: center; }
+    .error { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Todo list</h1>
+    <p class="status" id="status">Connecting to the API…</p>
+
+    <form id="add-form">
+      <input type="text" id="title" placeholder="What needs doing?" maxlength="200" required />
+      <button type="submit">Add task</button>
+    </form>
+
+    <ul id="list"></ul>
+  </main>
+
+  <script>
+    // Requests go to /api on the same origin; nginx in the frontend pod
+    // proxies them to the backend Service inside the cluster.
+    const API = "/api/todos";
+    const list = document.getElementById("list");
+    const statusEl = document.getElementById("status");
+
+    async function request(url, options = {}) {
+      const res = await fetch(url, { headers: { "Content-Type": "application/json" }, ...options });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      return res.status === 204 ? null : res.json();
+    }
+
+    function render(todos) {
+      list.innerHTML = "";
+      if (todos.length === 0) {
+        list.innerHTML = '<li class="empty">No tasks yet. Add one above.</li>';
+        return;
+      }
+      for (const t of todos) {
+        const li = document.createElement("li");
+        if (t.done) li.classList.add("done");
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = t.done;
+        cb.setAttribute("aria-label", "Mark as done");
+        cb.onchange = () => update(t.id, { done: cb.checked });
+
+        const span = document.createElement("span");
+        span.textContent = t.title;
+
+        const del = document.createElement("button");
+        del.className = "delete";
+        del.textContent = "Delete";
+        del.onclick = () => remove(t.id);
+
+        li.append(cb, span, del);
+        list.appendChild(li);
+      }
+    }
+
+    async function load() {
+      try {
+        const todos = await request(API);
+        render(todos);
+        statusEl.textContent = `${todos.filter(t => !t.done).length} open, ${todos.length} total`;
+        statusEl.classList.remove("error");
+      } catch (e) {
+        statusEl.textContent = `Can't reach the API (${e.message}). Check the backend pod.`;
+        statusEl.classList.add("error");
+      }
+    }
+
+    async function update(id, data) {
+      await request(`${API}/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+      load();
+    }
+
+    async function remove(id) {
+      await request(`${API}/${id}`, { method: "DELETE" });
+      load();
+    }
+
+    document.getElementById("add-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const input = document.getElementById("title");
+      await request(API, { method: "POST", body: JSON.stringify({ title: input.value }) });
+      input.value = "";
+      load();
+    };
+
+    load();
+  </script>
+</body>
+</html>
