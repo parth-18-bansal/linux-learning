@@ -46,14 +46,18 @@ A. Who, why, how talk with apiserver, (what is required to talk)
 ->
 2. scheduler
 ->
+
 3. kubelet
-->   a. 
-        1. Although we are not following TLS bootstraping, but kubelet when start first time then
-        it talks with apiserver to get signed client certificate, and to talk for first time, kubelet use
-        bootstrap token. but if it we not follow TLS bootstrap then kubelet talks with apiserver
-        by manually created client cert.
-     b.how
-     c.things required
+    -> TLS BootStrap:
+        1. We are not using TLS bootstrap, so we are talking with apiserver via manually created client
+        cert
+        2. Kubelet talks with apiserver to get client-cert via token.
+        b.how
+        c.
+        -> kubelet needs token that we created manually.
+
+    -> Worker Node registeration:
+
 4. kubectl
 ->
 
@@ -61,7 +65,9 @@ A. Who, why, how talk with apiserver, (what is required to talk)
 
 
 B. Jobs of Apiserver
-1. 
+-> TLS bootstraping: 
+    1. it authenticates and authorises the kubelet (who is talking via token)
+    2. Act as center communication point, for kubelet, controller manager and etcd.
 
 
 

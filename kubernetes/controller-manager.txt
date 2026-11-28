@@ -15,3 +15,16 @@ node object then it assign the PodCIDR to it.
 --cluster-cidr=10.244.0.0/16 \
 
 2. 
+
+
+
+
+
+Jobs
+****************************************************
+B. Jobs of Controller manager
+-> TLS bootstraping: 
+    1. csrapproving controller: approve the CSR created by kubelet
+    2. csrsigning controller: issue the client - certificate for worker node
+    3. tokencleaner controller: if we are using the bootstrap token, then it delete and expired tokens
+    4. csrcleaner controller: it delete the csr object after 1hr or 24 hrs

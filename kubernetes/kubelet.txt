@@ -18,3 +18,12 @@ kubelet writes the pod's /etc/resolv.conf: normal pod as well as CoreDNS pod:
     1. cgroupDriver
 4. kubelet talks with others
     1. kubeconfig file
+
+
+Jobs
+****************************************************
+B. Jobs of Kubelet
+-> TLS bootstraping: 
+    1. it creates the CSR object for client-cert
+    2. It download the issued client cert and stores it in worker node
+    3. Then creates the kube-config file for worker-node
